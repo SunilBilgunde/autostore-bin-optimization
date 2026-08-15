@@ -10,7 +10,7 @@ Scaled roughly in line with real AutoStore deployments — around 60k bins,
 
 ## Status
 
-Phase 1 (data generation) is done.
+Phase 1 (data generation) and Phase 2 (loading into PostgreSQL) are done.
 
 - `generate_skus.py` builds a catalog of ~500 parts across three fictional
   brands, each with a realistic weight and set of dimensions based on
