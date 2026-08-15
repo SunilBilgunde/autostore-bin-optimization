@@ -29,12 +29,12 @@ Phase 1 (data generation) and Phase 2 (loading into PostgreSQL) are done.
 
 ## Setup
 
-\`\`\`
+```
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 python src/generate_skus.py
 python src/generate_orders.py
-\`\`\`
+```
 
 You'll also need a local PostgreSQL database and `.env` file with your own DB credentials to run 'load_to_postgres.py'.
