@@ -18,10 +18,11 @@ Phase 1 (data generation) is done.
 - `generate_orders.py` builds order and order-line data on top of that
   catalog — quantities are weighted by part category, and customer/address
   data uses UK formatting.
-
+~ 'load_to_postgres.py' loads all three datasets into PostgreSQL, with primary keys,unique constraints, and foreign keys linking order lines back to both orders and parts.
+  DB credentials are kept in `.env` file, not in the repo.
+  
 ## Coming next
 
-- Load everything into PostgreSQL
 - Build out the SQL transformation layer / star schema
 - Orchestrate with Airflow
 - Dashboards in Metabase
@@ -35,3 +36,5 @@ pip install -r requirements.txt
 python src/generate_skus.py
 python src/generate_orders.py
 \`\`\`
+
+You'll also need a local PostgreSQL database and `.env` file with your own DB credentials to run 'load_to_postgres.py'.
