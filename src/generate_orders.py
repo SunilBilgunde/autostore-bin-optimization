@@ -68,18 +68,33 @@ def generate_delivery(delivery_options):
     delivery_type = random.choice(delivery_options[delivery_code])
     return delivery_code, delivery_type
 
-def generate_order(order_number, order_lines_df):
+def generate_customers(num_customers):
+    customers = []
+    for i in range(num_customers):
+        customer_id = i + 1
+        customer_name = fake.company()
+        address = fake.street_address()
+        city = fake.city()
+        postcode = fake.postcode()
+        customers.append((customer_id, customer_name, address, city, postcode))
+    return customers
+
+customers = generate_customers(40)
+
+customers_df = pd.DataFrame(customers,columns=["customer_id", "customer_name", "address", "city", "postcode"])
+customers_df.to_csv("data/raw/customers.csv", index=False)
+
+def generate_order(order_number, order_lines_df,customers):
     order_date = fake.date_between(start_date="-180d", end_date = "today")
-    customer_name = fake.company()
-    address = fake.street_address()
-    city = fake.city()
-    postcode = fake.postcode()
+    customer = random.choice(customers)
+    customer_id = customer[0]
+    
     order_pool = random.choice(ORDER_POOLS)
     delivery_code, delivery_type = generate_delivery(DELIVERY_OPTIONS)
     work_id = generate_work_id()
     products_summary = summarize_order(order_number, order_lines_df)
 
-    return (order_number, order_date, customer_name, address, city, postcode, order_pool, delivery_code, delivery_type, work_id, products_summary)
+    return (order_number, order_date, customer_id, order_pool, delivery_code, delivery_type, work_id, products_summary)
 
 # generate order lines for multiple orders
 all_order_lines = []
@@ -100,10 +115,10 @@ orders_data = []
 unique_orders = order_lines_df["order_number"].unique()
 
 for order_number in unique_orders:
-    order = generate_order(order_number, order_lines_df)
+    order = generate_order(order_number, order_lines_df,customers)
     orders_data.append(order)
 
-orders_df = pd.DataFrame(orders_data, columns=["order_number","order_date", "customer_name", "address", "city", "postcode", "order_pool",
+orders_df = pd.DataFrame(orders_data, columns=["order_number","order_date", "customer_id", "order_pool",
                                                "delivery_code", "delivery_type","work_id", "products_summary"
                                                ])
 orders_df.to_csv("data/raw/orders.csv", index=False)
