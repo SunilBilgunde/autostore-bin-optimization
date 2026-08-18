@@ -16,11 +16,13 @@ engine = create_engine(f"postgresql://{db_user}:{db_password}@{db_host}:{db_port
 
 parts_df = pd.read_csv("data/raw/parts.csv")
 customers_df = pd.read_csv("data/raw/customers.csv")
+dim_date_df = pd.read_csv("data/raw/dim_date.csv")
 orders_df = pd.read_csv("data/raw/orders.csv")
 order_lines_df = pd.read_csv("data/raw/order_lines.csv")
 
 parts_df.to_sql("parts", engine, if_exists="append", index=False)
 customers_df.to_sql("customers", engine, if_exists="append", index=False)
+dim_date_df.to_sql("dim_date", engine, if_exists="append", index=False)
 orders_df.to_sql("orders", engine, if_exists="append", index=False)
 order_lines_df.to_sql("order_lines", engine, if_exists="append", index=False)
 

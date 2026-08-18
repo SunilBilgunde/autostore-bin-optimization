@@ -1,6 +1,7 @@
 import random
 import pandas as pd
 from faker import Faker
+from datetime import date
 fake = Faker("en_GB")
 
 ORDER_POOLS = ["RAPID", "IFA", "GENERAL TRAFFIC", "PALLET", "DPD", "Scotland", "Priority", "Box"]
@@ -85,7 +86,7 @@ customers_df = pd.DataFrame(customers,columns=["customer_id", "customer_name", "
 customers_df.to_csv("data/raw/customers.csv", index=False)
 
 def generate_order(order_number, order_lines_df,customers):
-    order_date = fake.date_between(start_date="-180d", end_date = "today")
+    order_date = fake.date_between(start_date=date(2026, 1, 1), end_date = date(2026, 6, 30))
     customer = random.choice(customers)
     customer_id = customer[0]
     

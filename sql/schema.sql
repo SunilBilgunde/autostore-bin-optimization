@@ -35,3 +35,13 @@ CREATE TABLE order_lines (
     category VARCHAR(50),
     quantity INTEGER
 );
+
+
+CREATE TABLE dim_date (
+    date DATE PRIMARY KEY,
+    day_of_week VARCHAR(10),
+    month INTEGER,
+    quarter INTEGER,
+    year INTEGER,
+    is_weekend BOOLEAN
+);
