@@ -24,10 +24,27 @@ Phase 1 (data generation) and Phase 2 (loading into PostgreSQL) and phase 3(tran
 - `sql/views.sql` builds a star schema on top of the raw tables
   (`fact_order_lines`, `dim_parts`, `dim_customers`, `dim_orders`,
   `dim_date`), plus the actual analysis: a velocity view counting how
-  often each part gets picked, and a slotting recommendation view that
+  often each part gets picked, a slotting recommendation view that
   buckets every part into Fast-Access / Standard / Deep-Storage zones
-  based on pick frequency — the core output the whole project is
-  built around.  
+  based on pick frequency, a bin capacity view (weight and volume
+  constraints, with a 65% packing-efficiency assumption), and a
+  `final_slotting_plan` view combining velocity and capacity into a
+  single restock-priority ranking — the project's core output.
+
+## Key Finding
+
+Combining pick frequency with bin capacity reveals something raw
+popularity alone misses: Brake Discs dominate the restock-trip estimates,
+not because they're picked most often overall, but because their weight
+(4-15kg) caps them at just 2 units per bin under AutoStore's 30kg limit.
+High-frequency + low-capacity means discs need restocking roughly 30x
+more often than similarly-popular but lighter/smaller parts like filters.
+
+This estimate assumes a bin depletes fully before refilling, which is a
+simplification — real replenishment usually triggers at a threshold, not
+at zero. Still, it's a useful directional signal for where bin capacity
+planning matters most.
+  
 ## Coming next
 
 - Orchestrate with Airflow
