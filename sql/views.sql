@@ -71,3 +71,21 @@ SELECT
         ELSE 'Deep-Storage'
     END AS slotting_zone
 FROM ranked;
+
+
+CREATE VIEW bin_capacity_analysis AS
+SELECT
+    part_sku,
+    brand,
+    category,
+    weight,
+    length,
+    width,
+    height,
+    FLOOR(30 / weight) AS weight_capacity,
+    FLOOR(51480 / (length * width * height)) AS volume_capacity,
+    LEAST(
+        FLOOR(30 / weight),
+        FLOOR(51480 / (length * width * height))
+    ) AS units_per_bin
+FROM dim_parts;
