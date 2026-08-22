@@ -89,3 +89,17 @@ SELECT
         FLOOR(51480 / (length * width * height))
     ) AS units_per_bin
 FROM dim_parts;
+
+CREATE VIEW final_slotting_plan AS
+SELECT
+	s.part_sku,
+	s.brand,
+	s.category,
+	s.pick_events,
+	s.slotting_zone,
+	b.units_per_bin,
+	ROUND(s.pick_events::NUMERIC /b.units_per_bin,2) AS restock_trip_estimate
+FROM slotting_recommendation s
+JOIN bin_capacity_analysis b
+ON s.part_sku = b.part_sku
+ORDER BY restock_trip_estimate DESC;
