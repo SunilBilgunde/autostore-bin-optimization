@@ -10,7 +10,7 @@ Scaled roughly in line with real AutoStore deployments — around 60k bins,
 
 ## Status
 
-Phase 1 (data generation) and Phase 2 (loading into PostgreSQL) are done.
+Phase 1 (data generation) and Phase 2 (loading into PostgreSQL) and phase 3(transformation) are done.
 
 - `generate_skus.py` builds a catalog of ~500 parts across three fictional
   brands, each with a realistic weight and set of dimensions based on
@@ -20,10 +20,16 @@ Phase 1 (data generation) and Phase 2 (loading into PostgreSQL) are done.
   data uses UK formatting.
 - `load_to_postgres.py` loads all three datasets into PostgreSQL, with primary keys,unique constraints, and foreign keys linking order lines back to both orders and parts.
   DB credentials are kept in `.env` file, not in the repo.
-  
+- `sql/schema.sql` has the full table structure.
+- `sql/views.sql` builds a star schema on top of the raw tables
+  (`fact_order_lines`, `dim_parts`, `dim_customers`, `dim_orders`,
+  `dim_date`), plus the actual analysis: a velocity view counting how
+  often each part gets picked, and a slotting recommendation view that
+  buckets every part into Fast-Access / Standard / Deep-Storage zones
+  based on pick frequency — the core output the whole project is
+  built around.  
 ## Coming next
 
-- Build out the SQL transformation layer / star schema
 - Orchestrate with Airflow
 - Dashboards in Metabase
 
