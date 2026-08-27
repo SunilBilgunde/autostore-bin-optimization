@@ -85,8 +85,15 @@ customers = generate_customers(40)
 customers_df = pd.DataFrame(customers,columns=["customer_id", "customer_name", "address", "city", "postcode"])
 customers_df.to_csv("data/raw/customers.csv", index=False)
 
-def generate_order(order_number, order_lines_df,customers):
-    order_date = fake.date_between(start_date=date(2026, 1, 1), end_date = date(2026, 6, 30))
+def get_weekday_dates(start_date, end_date):
+    all_dates = pd.date_range(start=start_date, end=end_date,freq='D')
+    weekday_dates =  all_dates[all_dates.day_of_week <5]
+    return list(weekday_dates)
+
+weekday_dates = get_weekday_dates(date(2026, 1, 1), date(2026, 6, 30))
+
+def generate_order(order_number, order_lines_df,customers,weekday_dates):
+    order_date = random.choice(weekday_dates).date()
     customer = random.choice(customers)
     customer_id = customer[0]
     
@@ -116,7 +123,7 @@ orders_data = []
 unique_orders = order_lines_df["order_number"].unique()
 
 for order_number in unique_orders:
-    order = generate_order(order_number, order_lines_df,customers)
+    order = generate_order(order_number, order_lines_df,customers,weekday_dates)
     orders_data.append(order)
 
 orders_df = pd.DataFrame(orders_data, columns=["order_number","order_date", "customer_id", "order_pool",
