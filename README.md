@@ -44,6 +44,13 @@ This estimate assumes a bin depletes fully before refilling, which is a
 simplification — real replenishment usually triggers at a threshold, not
 at zero. Still, it's a useful directional signal for where bin capacity
 planning matters most.
+
+A second issue surfaced while validating `dim_date`: order dates were
+originally generated uniformly across every calendar day, including
+weekends — but the warehouse only operates Monday-Friday. Roughly 29% of
+generated order lines had physically impossible weekend dates. Fixed by
+sampling `order_date` only from a pre-built list of valid weekdays,
+rather than generating and filtering after the fact.
   
 ## Coming next
 
