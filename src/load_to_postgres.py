@@ -6,11 +6,11 @@ from sqlalchemy import create_engine
 
 load_dotenv()
 
-db_user = os.getenv("DB_USER")
-db_password = os.getenv("DB_PASSWORD")
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT")
-db_name = os.getenv("DB_NAME")
+db_user = os.getenv("AUTOSTORE_DB_USER")
+db_password = os.getenv("AUTOSTORE_DB_PASSWORD")
+db_host = os.getenv("AUTOSTORE_DB_HOST")
+db_port = os.getenv("AUTOSTORE_DB_PORT")
+db_name = os.getenv("AUTOSTORE_DB_NAME")
 
 engine = create_engine(f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
 
@@ -19,6 +19,11 @@ customers_df = pd.read_csv("data/raw/customers.csv")
 dim_date_df = pd.read_csv("data/raw/dim_date.csv")
 orders_df = pd.read_csv("data/raw/orders.csv")
 order_lines_df = pd.read_csv("data/raw/order_lines.csv")
+
+from sqlalchemy import text
+
+with engine.begin() as conn:
+    conn.execute(text("TRUNCATE TABLE order_lines, orders, customers, parts, dim_date RESTART IDENTITY CASCADE"))
 
 parts_df.to_sql("parts", engine, if_exists="append", index=False)
 customers_df.to_sql("customers", engine, if_exists="append", index=False)
